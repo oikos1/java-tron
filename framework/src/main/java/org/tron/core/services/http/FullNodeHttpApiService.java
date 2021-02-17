@@ -91,6 +91,8 @@ public class FullNodeHttpApiService implements Service {
   @Autowired
   private GetBlockByLatestNumServlet getBlockByLatestNumServlet;
   @Autowired
+   private GetBlockInfoByLimitNextServlet getBlockInfoByLimitNext;
+    @Autowired
   private GetTransactionByIdServlet getTransactionByIdServlet;
   @Autowired
   private GetTransactionInfoByIdServlet getTransactionInfoByIdServlet;
@@ -371,6 +373,8 @@ public class FullNodeHttpApiService implements Service {
           "/wallet/getblockbylatestnum");
       context.addServlet(new ServletHolder(getTransactionByIdServlet),
           "/wallet/gettransactionbyid");
+           context.addServlet(new ServletHolder(getBlockInfoByLimitNext),
+			             "/wallet/getblockinfobylimitnext");
       context.addServlet(
           new ServletHolder(getTransactionInfoByIdServlet), "/wallet/gettransactioninfobyid");
       context.addServlet(

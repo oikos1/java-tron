@@ -402,6 +402,16 @@ service Wallet {
   rpc GetTransactionCountByBlockNum (NumberMessage) returns (NumberMessage) {
   }
 
+
+ rpc GetBlockInfoByLimitNext (BlockLimit) returns (BlockInfoList) {
+    option (google.api.http) = {
+      post: "/wallet/getblockinfobylimitnext"
+      body: "*"
+      additional_bindings {
+        get: "/wallet/getblockinfobylimitnext"
+      }
+    };
+  }
   rpc GetBlockById (BytesMessage) returns (Block) {
     option (google.api.http) = {
       post: "/wallet/getblockbyid"
@@ -1189,7 +1199,14 @@ message EasyTransferAssetByPrivateMessage {
   string assetId = 3;
   int64 amount = 4;
 }
-
+message BlockInfo {
+  TransactionInfoList transactionInfoList = 1;
+  BlockHeader block_header = 2;
+  bytes blockid = 3;
+}
+message BlockInfoList {
+  repeated BlockInfo block = 1;
+}
 message EasyTransferResponse {
   Transaction transaction = 1;
   Return result = 2;

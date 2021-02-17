@@ -59,6 +59,8 @@ import org.tron.api.GrpcAPI.AccountNetMessage;
 import org.tron.api.GrpcAPI.AccountResourceMessage;
 import org.tron.api.GrpcAPI.Address;
 import org.tron.api.GrpcAPI.AssetIssueList;
+import org.tron.api.GrpcAPI.BlockInfo;
+import org.tron.api.GrpcAPI.BlockInfoList;
 import org.tron.api.GrpcAPI.BlockList;
 import org.tron.api.GrpcAPI.BytesMessage;
 import org.tron.api.GrpcAPI.DecryptNotes;
@@ -1261,6 +1263,32 @@ public class Wallet {
     }
     return block;
   }
+
+    private BlockInfo blockCapsule2BlockInfo(BlockCapsule blockCapsule) {
+	        Block block = blockCapsule.getInstance();
+		    BlockInfo.Builder builder = BlockInfo.newBuilder();
+
+		        builder.setBlockHeader(block.getBlockHeader());
+			    builder.setBlockid(ByteString.copyFrom(blockCapsule.getBlockId().getBytes()));
+
+			        TransactionInfoList transactionInfoList = getTransactionInfoByBlockNum(blockCapsule.getNum());
+				    builder.setTransactionInfoList(transactionInfoList);
+
+				        return builder.build();
+					  }
+
+      public BlockInfoList getBlockInfoByLimitNext(long number, long limit) {
+	          if (limit <= 0) {
+			        return null;
+				    }
+		      BlockInfoList.Builder builder = BlockInfoList.newBuilder();
+		          List<BlockCapsule> blockCapsuleList = chainBaseManager
+				          .getBlockStore().getLimitNumber(number, limit);
+			      for (BlockCapsule blockCapsule : blockCapsuleList) {
+				            builder.addBlock(blockCapsule2BlockInfo(blockCapsule));
+					        }
+			          return builder.build();
+				    }
 
   public BlockList getBlocksByLimitNext(long number, long limit) {
     if (limit <= 0) {
